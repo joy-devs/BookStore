@@ -1,7 +1,7 @@
 import React, { useReducer, useRef, useEffect, useState, useCallback } from 'react';
 import bookReducer from '../Reducers/Bookreducer';
 import useLocalStorage from '../Hooks/useLocalStorage';
-import '../App.css';  
+import '../App.css';  // Make sure this import statement is present
 
 export interface Book {
   id: string;
@@ -15,6 +15,7 @@ const BookRepository: React.FC = () => {
   const [storedBooks, setStoredBooks] = useLocalStorage<Book[]>('books', []);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [showForm, setShowForm] = useState(false);
 
   const titleRef = useRef<HTMLInputElement>(null);
   const authorRef = useRef<HTMLInputElement>(null);
@@ -44,6 +45,7 @@ const BookRepository: React.FC = () => {
       titleRef.current.value = '';
       authorRef.current.value = '';
       yearRef.current.value = '';
+      setShowForm(false); // Hide form after adding book
     }
   };
 
@@ -76,12 +78,17 @@ const BookRepository: React.FC = () => {
   return (
     <div className="container">
       <h1>Book Repository</h1>
-      <form>
-        <input type="text" placeholder="Title" ref={titleRef} />
-        <input type="text" placeholder="Author" ref={authorRef} />
-        <input type="number" placeholder="Year" ref={yearRef} />
-        <button type="button" onClick={handleAddBook}>Add Book</button>
-      </form>
+      <button onClick={() => setShowForm(!showForm)}>
+        {showForm ? 'Cancel' : 'Add Book'}
+      </button>
+      {showForm && (
+        <form>
+          <input type="text" placeholder="Title" ref={titleRef} />
+          <input type="text" placeholder="Author" ref={authorRef} />
+          <input type="number" placeholder="Year" ref={yearRef} />
+          <button type="button" onClick={handleAddBook}>Add Book</button>
+        </form>
+      )}
       <div className="search-container">
         <input
           type="text"
@@ -106,8 +113,8 @@ const BookRepository: React.FC = () => {
               <td>{book.author}</td>
               <td>{book.year}</td>
               <td>
-                <button onClick={() => handleUpdateBook(book)}>Edit</button>
-                <button onClick={() => handleDeleteBook(book.id)}>Delete</button>
+                <button className="edit-button" onClick={() => handleUpdateBook(book)}>Edit</button>
+                <button className="delete-button" onClick={() => handleDeleteBook(book.id)}>Delete</button>
               </td>
             </tr>
           ))}

@@ -1,0 +1,49 @@
+
+GET http://localhost:8000/api/ok/
+
+###
+GET http://localhost:8000/api/timeout
+
+###
+
+GET http://localhost:8000/api/users?limit=4
+
+###
+
+GET http://localhost:8000/api/metrics
+
+###
+
+GET http://localhost:8000/api/users/10
+
+###
+
+POST http://localhost:8000/api/users
+Content-Type: application/json
+
+{
+   
+    "fullname": "John Doe 7",
+    "phone": "+254187324234",
+    "address": "Nairobi, Kenya",
+    "score" : 43
+}
+
+###
+
+PUT http://localhost:8000/api/users/110
+Content-Type: application/json
+
+{
+    "fullname": "Kevin"
+}
+###
+DELETE http://localhost:8000/api/users/"9"
+
+###
+
+GET http://localhost:8000/api/profiles/
+
+
+
+

@@ -1,24 +1,42 @@
 /* styles.css */
 
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f2f5;
   margin: 0;
   padding: 0;
 }
 
 .container {
-  max-width: 900px;
-  margin: 0 auto;
+  max-width: 800px;
+  margin: 40px auto;
   padding: 20px;
-  background-color: #ac8f8f;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 
 h1 {
   text-align: center;
   color: #333;
+  margin-bottom: 20px;
+  font-size: 2em;
+}
+
+button {
+  padding: 10px;
+  border: none;
+  background-color: #337ab7;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px 0;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #286090;
+  transform: scale(1.05);
 }
 
 form {
@@ -42,10 +60,13 @@ form button {
   color: white;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 form button:hover {
   background-color: #4cae4c;
+  transform: scale(1.05);
 }
 
 .search-container {
@@ -62,11 +83,12 @@ form button:hover {
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 20px;
 }
 
 table th,
 table td {
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ccc;
   text-align: left;
 }
@@ -78,15 +100,30 @@ table th {
 table td button {
   padding: 5px 10px;
   border: none;
-  background-color: #d9534f;
   color: white;
   border-radius: 4px;
   cursor: pointer;
+  margin-right: 10px;
+  /* Space between buttons */
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-table td button:hover {
-  background-color: #180a09;
-  margin-left: 20px;
+table td .edit-button {
+  background-color: #5bc0de;
+}
+
+table td .edit-button:hover {
+  background-color: #31b0d5;
+  transform: scale(1.05);
+}
+
+table td .delete-button {
+  background-color: #d9534f;
+}
+
+table td .delete-button:hover {
+  background-color: #c9302c;
+  transform: scale(1.05);
 }
 
 .pagination {
@@ -103,6 +140,7 @@ table td button:hover {
   border-radius: 4px;
   cursor: pointer;
   margin: 0 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .pagination button:disabled {
@@ -112,5 +150,10 @@ table td button:hover {
 
 .pagination button:hover:enabled {
   background-color: #286090;
+  transform: scale(1.05);
+}
 
+.pagination button:disabled:hover {
+  transform: none;
+  /* Prevent scaling on hover if disabled */
 }
