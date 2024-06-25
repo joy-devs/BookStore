@@ -1,6 +1,7 @@
 import React, { useReducer, useRef, useEffect, useState, useCallback } from 'react';
 import bookReducer from '../Reducers/Bookreducer';
 import useLocalStorage from '../Hooks/useLocalStorage';
+import '../App.css';  
 
 export interface Book {
   id: string;
@@ -19,14 +20,12 @@ const BookRepository: React.FC = () => {
   const authorRef = useRef<HTMLInputElement>(null);
   const yearRef = useRef<HTMLInputElement>(null);
 
-  // Initialize state with storedBooks only once
   useEffect(() => {
     if (storedBooks.length > 0) {
       dispatch({ type: 'SET_INITIAL_STATE', payload: storedBooks });
     }
   }, [storedBooks]);
 
-  // Update local storage whenever books state changes
   useEffect(() => {
     if (books.length !== storedBooks.length) {
       setStoredBooks(books);
@@ -75,16 +74,21 @@ const BookRepository: React.FC = () => {
   }, [currentPage]);
 
   return (
-    <div>
+    <div className="container">
       <h1>Book Repository</h1>
-      <div>
+      <form>
         <input type="text" placeholder="Title" ref={titleRef} />
         <input type="text" placeholder="Author" ref={authorRef} />
         <input type="number" placeholder="Year" ref={yearRef} />
-        <button onClick={handleAddBook}>Add Book</button>
-      </div>
-      <div>
-        <input type="text" placeholder="Search by title" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+        <button type="button" onClick={handleAddBook}>Add Book</button>
+      </form>
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search by title"
+          value={searchTerm}
+          onChange={e => setSearchTerm(e.target.value)}
+        />
       </div>
       <table>
         <thead>
@@ -109,7 +113,7 @@ const BookRepository: React.FC = () => {
           ))}
         </tbody>
       </table>
-      <div>
+      <div className="pagination">
         <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
         <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
       </div>
