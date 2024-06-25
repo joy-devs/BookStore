@@ -1,37 +1,9 @@
 {
-  "id": "d6ecbc90-6f03-4f88-b6f3-aec10e02ffb9",
+  "id": "7d80fdd3-d454-4501-95d6-8e731a50428c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.authors": {
-      "name": "authors",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "biography": {
-          "name": "biography",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
     "public.books": {
       "name": "books",
       "schema": "",
@@ -48,35 +20,21 @@
           "primaryKey": false,
           "notNull": false
         },
-        "author_id": {
-          "name": "author_id",
-          "type": "integer",
+        "author": {
+          "name": "author",
+          "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "publication_year": {
-          "name": "publication_year",
+        "year": {
+          "name": "year",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "books_author_id_authors_id_fk": {
-          "name": "books_author_id_authors_id_fk",
-          "tableFrom": "books",
-          "tableTo": "authors",
-          "columnsFrom": [
-            "author_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

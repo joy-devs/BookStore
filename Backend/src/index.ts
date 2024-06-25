@@ -9,6 +9,7 @@ import { HTTPException } from 'hono/http-exception'
 import { prometheus } from '@hono/prometheus'
 
 import { userRouter } from './users/user.router'
+import { bookRouter } from './books/books.router'
 
 
 const app = new Hono().basePath('/api')
@@ -40,7 +41,8 @@ app.get('/timeout', async (c) => {
 app.get('/metrics', printMetrics)
 
 // custom route
-app.route("/", userRouter)   // /users/ /profile
+app.route("/", userRouter)
+app.route("/", bookRouter)   // /users/ /profile
 
 
 

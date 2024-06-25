@@ -1,11 +1,8 @@
-import { z } from 'zod'
+// bookSchema.ts
+import { z } from "zod";
 
-
-export const userSchema = z.object({
-    fullname: z.string(),
-    phone: z.string(),
-    address: z.string(),
-    score: z.number()
-})
-
-
+export const bookSchema = z.object({
+  title: z.string().min(1).max(255),
+  authorId: z.number().int(),
+  publicationYear: z.number().int().min(1000).max(9999),
+});
