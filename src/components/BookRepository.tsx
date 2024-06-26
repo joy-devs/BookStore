@@ -1,8 +1,7 @@
 import React, { useReducer, useRef, useEffect, useState, useCallback } from 'react';
 import bookReducer from '../Reducers/Bookreducer';
 import useLocalStorage from '../Hooks/useLocalStorage';
-import Pagination from './Pagination'; // Import the Pagination component
-import '../App.css';  // Make sure this import statement is present
+import '../App.css';  
 
 export interface Book {
   id: string;
@@ -141,9 +140,17 @@ const BookRepository: React.FC = () => {
   const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
   const displayedBooks = filteredBooks.slice((currentPage - 1) * booksPerPage, currentPage * booksPerPage);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const handleNextPage = useCallback(() => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  }, [currentPage, totalPages]);
+
+  const handlePreviousPage = useCallback(() => {
+    if (currentPage > 1) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  }, [currentPage]);
 
   return (
     <div className="container">
@@ -197,7 +204,10 @@ const BookRepository: React.FC = () => {
           ))}
         </tbody>
       </table>
-      <Pagination currentPage={currentPage} totalPages={totalPages} onChangePage={handlePageChange} />
+      <div className="pagination">
+        <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
+        <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
+      </div>
     </div>
   );
 };
