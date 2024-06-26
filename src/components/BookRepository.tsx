@@ -1,7 +1,8 @@
 import React, { useReducer, useRef, useEffect, useState, useCallback } from 'react';
 import bookReducer from '../Reducers/Bookreducer';
 import useLocalStorage from '../Hooks/useLocalStorage';
-import '../App.css';  
+import Pagination from './Pagination'; // Import the Pagination component
+import '../App.css';  // Make sure this import statement is present
 
 export interface Book {
   id: string;
@@ -50,7 +51,7 @@ const BookRepository: React.FC = () => {
     }
   }, [books, setStoredBooks, storedBooks.length]);
 
-  const handleAddBook = () => {
+  const handleAddBook = useCallback(() => {
     if (titleRef.current && authorRef.current && yearRef.current) {
       const title = titleRef.current.value.trim();
       const author = authorRef.current.value.trim();
@@ -84,9 +85,9 @@ const BookRepository: React.FC = () => {
       yearRef.current.value = '';
       setShowForm(false); // Hide form after adding/updating book
     }
-  };
+  }, [books, editingBook, setStoredBooks]);
 
-  const handleEditBook = (book: Book) => {
+  const handleEditBook = useCallback((book: Book) => {
     setEditingBook(book);
     setShowForm(true);
     if (titleRef.current && authorRef.current && yearRef.current) {
@@ -94,9 +95,9 @@ const BookRepository: React.FC = () => {
       authorRef.current.value = book.author;
       yearRef.current.value = book.year.toString();
     }
-  };
+  }, []);
 
-  const handleUpdateBook = () => {
+  const handleUpdateBook = useCallback(() => {
     if (!editingBook) return;
 
     if (titleRef.current && authorRef.current && yearRef.current) {
@@ -127,30 +128,22 @@ const BookRepository: React.FC = () => {
       authorRef.current.value = '';
       yearRef.current.value = '';
     }
-  };
+  }, [books, editingBook, setStoredBooks]);
 
-  const handleDeleteBook = (id: string) => {
+  const handleDeleteBook = useCallback((id: string) => {
     dispatch({ type: 'DELETE_BOOK', payload: id });
     setStoredBooks(books.filter(book => book.id !== id));
-  };
+  }, [books, setStoredBooks]);
+
+  const handlePageChange = useCallback((page: number) => {
+    setCurrentPage(page);
+  }, []);
 
   const filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchTerm.toLowerCase()));
 
   const booksPerPage = 5;
   const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
   const displayedBooks = filteredBooks.slice((currentPage - 1) * booksPerPage, currentPage * booksPerPage);
-
-  const handleNextPage = useCallback(() => {
-    if (currentPage < totalPages) {
-      setCurrentPage(prevPage => prevPage + 1);
-    }
-  }, [currentPage, totalPages]);
-
-  const handlePreviousPage = useCallback(() => {
-    if (currentPage > 1) {
-      setCurrentPage(prevPage => prevPage - 1);
-    }
-  }, [currentPage]);
 
   return (
     <div className="container">
@@ -204,10 +197,7 @@ const BookRepository: React.FC = () => {
           ))}
         </tbody>
       </table>
-      <div className="pagination">
-        <button onClick={handlePreviousPage} disabled={currentPage === 1}>Previous</button>
-        <button onClick={handleNextPage} disabled={currentPage === totalPages}>Next</button>
-      </div>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onChangePage={handlePageChange} />
     </div>
   );
 };
