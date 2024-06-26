@@ -16,6 +16,7 @@ const BookRepository: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [showForm, setShowForm] = useState(false);
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
 
   const titleRef = useRef<HTMLInputElement>(null);
   const authorRef = useRef<HTMLInputElement>(null);
@@ -35,22 +36,45 @@ const BookRepository: React.FC = () => {
 
   const handleAddBook = () => {
     if (titleRef.current && authorRef.current && yearRef.current) {
+      const title = titleRef.current.value.trim();
+      const author = authorRef.current.value.trim();
+      const year = parseInt(yearRef.current.value, 10);
+
+      // Validate that no fields are empty
+      if (!title || !author || isNaN(year)) {
+        alert("All fields must be filled out correctly.");
+        return;
+      }
+
       const newBook: Book = {
         id: Date.now().toString(),
-        title: titleRef.current.value,
-        author: authorRef.current.value,
-        year: parseInt(yearRef.current.value, 10),
+        title,
+        author,
+        year,
       };
-      dispatch({ type: 'ADD_BOOK', payload: newBook });
+
+      if (editingBook) {
+        dispatch({ type: 'UPDATE_BOOK', payload: { ...newBook, id: editingBook.id } });
+        setEditingBook(null); // Clear editing state
+      } else {
+        dispatch({ type: 'ADD_BOOK', payload: newBook });
+      }
+
       titleRef.current.value = '';
       authorRef.current.value = '';
       yearRef.current.value = '';
-      setShowForm(false); // Hide form after adding book
+      setShowForm(false); // Hide form after adding/updating book
     }
   };
 
-  const handleUpdateBook = (book: Book) => {
-    dispatch({ type: 'UPDATE_BOOK', payload: book });
+  const handleEditBook = (book: Book) => {
+    setEditingBook(book);
+    setShowForm(true);
+    if (titleRef.current && authorRef.current && yearRef.current) {
+      titleRef.current.value = book.title;
+      authorRef.current.value = book.author;
+      yearRef.current.value = book.year.toString();
+    }
   };
 
   const handleDeleteBook = (id: string) => {
@@ -78,7 +102,12 @@ const BookRepository: React.FC = () => {
   return (
     <div className="container">
       <h1>Book Repository</h1>
-      <button onClick={() => setShowForm(!showForm)}>
+      <button onClick={() => {
+        setShowForm(!showForm);
+        if (!showForm) {
+          setEditingBook(null); // Clear editing state when opening the form
+        }
+      }}>
         {showForm ? 'Cancel' : 'Add Book'}
       </button>
       {showForm && (
@@ -86,7 +115,9 @@ const BookRepository: React.FC = () => {
           <input type="text" placeholder="Title" ref={titleRef} />
           <input type="text" placeholder="Author" ref={authorRef} />
           <input type="number" placeholder="Year" ref={yearRef} />
-          <button type="button" onClick={handleAddBook}>Add Book</button>
+          <button type="button" onClick={handleAddBook}>
+            {editingBook ? 'Update Book' : 'Add Book'}
+          </button>
         </form>
       )}
       <div className="search-container">
@@ -113,7 +144,7 @@ const BookRepository: React.FC = () => {
               <td>{book.author}</td>
               <td>{book.year}</td>
               <td>
-                <button className="edit-button" onClick={() => handleUpdateBook(book)}>Edit</button>
+                <button className="edit-button" onClick={() => handleEditBook(book)}>Edit</button>
                 <button className="delete-button" onClick={() => handleDeleteBook(book.id)}>Delete</button>
               </td>
             </tr>

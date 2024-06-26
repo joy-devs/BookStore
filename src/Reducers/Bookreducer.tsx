@@ -1,7 +1,7 @@
 import { Book } from "../components/BookRepository";
 
 
-type Action =
+export type Action =
   | { type: 'SET_INITIAL_STATE'; payload: Book[] }
   | { type: 'ADD_BOOK'; payload: Book }
   | { type: 'UPDATE_BOOK'; payload: Book }

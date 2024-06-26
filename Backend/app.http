@@ -22,7 +22,7 @@ POST http://localhost:8000/api/books
 Content-Type: application/json
 
 {
-  "id": 1,
+  "id": 2,
   "title": "Sample Book",
   "author": "John Doe",
   "year": 2023

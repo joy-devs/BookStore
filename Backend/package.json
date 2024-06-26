@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "deve": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "gen":"drizzle-kit generate",

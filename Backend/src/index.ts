@@ -40,8 +40,7 @@ app.get('/timeout', async (c) => {
 })
 app.get('/metrics', printMetrics)
 
-// custom route
-app.route("/", userRouter)
+
 app.route("/", bookRouter)   // /users/ /profile
 
 
