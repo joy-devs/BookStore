@@ -47,18 +47,21 @@ const BookRepository: React.FC = () => {
       }
 
       const newBook: Book = {
-        id: Date.now().toString(),
+        id: editingBook ? editingBook.id : Date.now().toString(),
         title,
         author,
         year,
       };
 
       if (editingBook) {
-        dispatch({ type: 'UPDATE_BOOK', payload: { ...newBook, id: editingBook.id } });
+        dispatch({ type: 'UPDATE_BOOK', payload: newBook });
         setEditingBook(null); // Clear editing state
       } else {
         dispatch({ type: 'ADD_BOOK', payload: newBook });
       }
+
+      // Update storedBooks in local storage
+      setStoredBooks([...books, newBook]);
 
       titleRef.current.value = '';
       authorRef.current.value = '';
@@ -77,8 +80,42 @@ const BookRepository: React.FC = () => {
     }
   };
 
+  const handleUpdateBook = () => {
+    if (!editingBook) return;
+
+    if (titleRef.current && authorRef.current && yearRef.current) {
+      const title = titleRef.current.value.trim();
+      const author = authorRef.current.value.trim();
+      const year = parseInt(yearRef.current.value, 10);
+
+      // Validate that no fields are empty
+      if (!title || !author || isNaN(year)) {
+        alert("All fields must be filled out correctly.");
+        return;
+      }
+
+      const updatedBook: Book = {
+        ...editingBook,
+        title,
+        author,
+        year,
+      };
+
+      dispatch({ type: 'UPDATE_BOOK', payload: updatedBook });
+      setStoredBooks(books.map(b => (b.id === updatedBook.id ? updatedBook : b)));
+
+      setEditingBook(null); // Clear editing state
+      setShowForm(false); // Hide form after adding/updating book
+
+      titleRef.current.value = '';
+      authorRef.current.value = '';
+      yearRef.current.value = '';
+    }
+  };
+
   const handleDeleteBook = (id: string) => {
     dispatch({ type: 'DELETE_BOOK', payload: id });
+    setStoredBooks(books.filter(book => book.id !== id));
   };
 
   const filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -115,7 +152,7 @@ const BookRepository: React.FC = () => {
           <input type="text" placeholder="Title" ref={titleRef} />
           <input type="text" placeholder="Author" ref={authorRef} />
           <input type="number" placeholder="Year" ref={yearRef} />
-          <button type="button" onClick={handleAddBook}>
+          <button type="button" onClick={editingBook ? handleUpdateBook : handleAddBook}>
             {editingBook ? 'Update Book' : 'Add Book'}
           </button>
         </form>
